@@ -15,7 +15,12 @@ class ProfileScreen extends React.Component {
 
     this.state = {
       loggedIn: false,
-      user: undefined
+      user: undefined,
+      name: undefined,
+      email: undefined,
+      teamNo: undefined,
+      teamName: undefined,
+      uid: undefined
     }
 
     this.handleSignOut = this.handleSignOut.bind(this)
@@ -24,7 +29,19 @@ class ProfileScreen extends React.Component {
   componentDidMount () {
     this.props.firebase.checkAuthUser(user => {
       if (user) {
-        this.setState({ loggedIn: true, user: user })
+        let email = undefined;
+        let name = undefined;
+        let teamNo = undefined;
+        let teamName = undefined;
+        let uid = undefined;
+        this.props.firebase.getUserData('8gi9WB5XMMdFwmwaAZQrGdq1GGC3').then(data => {
+          console.log(data.data().email);
+          email = data.data().email;
+          name = data.data().name;
+          teamNo = data.data().team;
+          uid = data.data().uid;
+          });
+        this.setState({ loggedIn: true, user: user, email: email, teamNo: teamNo})
       }
     })
   }
@@ -38,12 +55,15 @@ class ProfileScreen extends React.Component {
   render () {
     /* eslint-disable */
     const { navigate } = this.props.navigation
+    //Show either profile (if logged in) or log-in/sign-up page (if logged out)
     return (
-      <>
+      <> 
         {this.state.loggedIn && (
           <View>
-            <Text>{this.state.user.email}</Text>
-            <Button title='Signout' onPress={this.handleSignOut} type='clear' />
+            <Text>{this.state.user.name}</Text>
+            <Text>{"Email Address: "}{this.state.user.email}</Text>
+            <Text>{"UID: "} {this.state.user.uid}</Text>
+            <Button title='Sign out' onPress={this.handleSignOut} type='clear' />
           </View>
         )}
         {!this.state.loggedIn && (
