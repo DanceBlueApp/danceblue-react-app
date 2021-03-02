@@ -15,7 +15,7 @@ class ProfileScreen extends React.Component {
 
     this.state = {
       loggedIn: false,
-      user: undefined,
+      user: undefined, 
       name: undefined,
       email: undefined,
       teamNo: undefined,
@@ -60,7 +60,6 @@ class ProfileScreen extends React.Component {
       <> 
         {this.state.loggedIn && (
           <View>
-            <Text>{this.state.user.name}</Text>
             <Text>{"Email Address: "}{this.state.user.email}</Text>
             <Text>{"UID: "} {this.state.user.uid}</Text>
             <Button title='Sign out' onPress={this.handleSignOut} type='clear' />
