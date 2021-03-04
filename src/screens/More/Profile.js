@@ -15,66 +15,159 @@ class ProfileScreen extends React.Component {
 
     this.state = {
       loggedIn: false,
+      signUp: false,
       user: undefined, 
       name: undefined,
       email: undefined,
       teamNo: undefined,
       teamName: undefined,
+      teamInfo: [],
       uid: undefined
     }
+  
 
-    this.handleSignOut = this.handleSignOut.bind(this)
+    this.handleSignOut = this.handleSignOut.bind(this);
+    this.handleSignIn = this.handleSignIn.bind(this);
   }
 
   componentDidMount () {
     this.props.firebase.checkAuthUser(user => {
-      if (user) {
         let email = undefined;
         let name = undefined;
         let teamNo = undefined;
         let teamName = undefined;
         let uid = undefined;
-        this.props.firebase.getUserData('8gi9WB5XMMdFwmwaAZQrGdq1GGC3').then(data => {
-          console.log(data.data().email);
+        //console.log('user: ', user);
+      if (user) {
+        //define team info vars to load with database data
+        this.props.firebase.getUserData(user.uid).then(data => {
           email = data.data().email;
           name = data.data().name;
           teamNo = data.data().team;
           uid = data.data().uid;
-          });
-        this.setState({ loggedIn: true, user: user, email: email, teamNo: teamNo})
+          this.getTeamName(data.data().team);
+          this.setState({ 
+            loggedIn: true, 
+            user: user, 
+            name: name,
+            email: email, 
+            teamNo: teamNo, 
+            uid: uid});
+        });
+        
+        //console.log('teamNo save test', this.state.teamNo);
+        //console.log('let teamNo test: ', teamNo);
+        // this.props.firebase.getTeam(teamNo).then(data => {
+        //   console.log('teamNo Test: ', data.data());
+        // })
       }
     })
   }
 
+  // SUPER jank way of doing this. Need to figure out how to actually do queries 
+  // instead of pulling the entire team database and searching it in JS.
+  // Currently: gets the entire teams collection, searches the 'number' field
+  // of the array of objects, returns the index of that team, 
+  // pulls the name field of that index, and updates the team name state.
+  // For future: query the DB for the name and throw it in the state.
+  // Couldn't get any of the code from tutorials to actually do this.
+  getTeamName(teamNo) {
+    let teamName = undefined
+    if(teamNo != undefined){
+      const teams = [];
+      let teamInfo = [];
+      this.props.firebase.getTeams().then(snapshot => {
+        snapshot.forEach(doc => {
+          teams.push({ id: doc.id, ...doc.data() })
+        })
+        let team = teams.findIndex(function(post, index) {
+          if(post.number == teamNo)
+            return true;
+        })
+        teamName = teams[team].name;
+        //console.log('teams[team]:', teams[team]);
+        teamInfo = teams[team];
+        //console.log('teamInfo: ', teamInfo);
+        this.setState({teamInfo: teamInfo});
+        this.setState({teamName: teamName});
+      });
+    }
+    
+    //Various attempts at getting DB queries working.
+    console.log('getTeamName teamNo = ', teamNo);
+    console.log('teamNo === undefined?', (teamNo === undefined))
+    let num = Number(teamNo);
+    console.log('num =', num);
+    if(num != NaN){
+      this.props.firebase.getTeam(teamNo)
+        .then((querySnapshot) => {
+        //console.log('querySnapshot: ', querySnapshot)
+      querySnapshot.forEach((doc) => { //Everything seems to work until this point. I get no output.
+        console.log("doc: ", doc);
+        console.log(doc.id, ' => ', doc.data());
+      });
+    })
+    .catch((error) => {
+      console.log("Error getting documents: ", error);
+    });
+    }
+      
+  }
+  
+  
+
   handleSignOut () {
     this.props.firebase.signOut().then(() => {
-      this.setState({ loggedIn: false, user: undefined })
+      this.setState({ loggedIn: false, signUp: false, user: undefined })
     })
   }
+
+  handleSignIn() {
+    if (this.state.signUp == true) {
+      this.setState({ loggedIn: false, signUp: false, user: undefined });
+    } else {
+      this.setState({ loggedIn: false, signUp: true, user: undefined });
+    }
+  }
+  
 
   render () {
     /* eslint-disable */
     const { navigate } = this.props.navigation
-    //Show either profile (if logged in) or log-in/sign-up page (if logged out)
+    // Show either profile (if logged in) or log-in/sign-up page (if logged out)
+    // console.log('nameTest', this.state.name);
+    //console.log('this.teamInfo:', this.state.teamInfo);
     return (
       <> 
         {this.state.loggedIn && (
           <View>
-            <Text>{"Email Address: "}{this.state.user.email}</Text>
+            <Text>{"Name: "}{this.state.name}</Text>
+            <Text>{"Email Address: "}{this.state.email}</Text>
+            <Text>{"Team Number: "}{this.state.teamNo}</Text>
+            <Text>{"Team Name: "}{this.state.teamName}</Text>
+            <Text>{"Team Size: "}{this.state.teamInfo.size}</Text>
+            <Text>{"Team Points: "}{this.state.teamInfo.points}</Text>
+            <Text>{"Team ID: "}{this.state.teamInfo.id}</Text>
             <Text>{"UID: "} {this.state.user.uid}</Text>
             <Button title='Sign out' onPress={this.handleSignOut} type='clear' />
           </View>
         )}
-        {!this.state.loggedIn && (
+        {!this.state.loggedIn && this.state.signUp && (
           <View>
             <Text h2 style={{ textAlign: 'center' }}>
               Sign Up
             </Text>
             <SignUpForm />
+            <Button title="Already signed up? Click here to Log in!" onPress={this.handleSignIn} type="clear" />
+          </View>
+        )}
+        {!this.state.loggedIn && !this.state.signUp &&(
+          <View>
             <Text h2 style={{ textAlign: 'center' }}>
               Login
             </Text>
             <LoginForm />
+            <Button title="New? Click here to Sign Up!" onPress={this.handleSignIn} type="clear" />
           </View>
         )}
       </>
