@@ -157,24 +157,22 @@ class ProfileScreen extends React.Component {
               <Text style={{lineHeight: 30}}>{"Team Number: "}{this.state.teamNo}</Text>
             </View>
             <View style={styles.horiStyle}>
-              <Button type="clear" icon={{name: "edit"}}/>
               <Text style={{lineHeight: 30}}>{"Team Name: "}{this.state.teamName}</Text>
             </View>
             <View style={styles.horiStyle}>
-              <Button type="clear" icon={{name: "edit"}}/>
               <Text style={{lineHeight: 30}}>{"Team Size: "}{this.state.teamInfo.size}</Text>
               </View>
             <View style={styles.horiStyle}>
-              <Button type="clear" icon={{name: "edit"}}/>
               <Text style={{lineHeight: 30}}>{"Team Points: "}{this.state.teamInfo.points}</Text>
             </View>
             <View style={styles.horiStyle}>
-              <Button type="clear" icon={{name: "edit"}}/>
               <Text style={{lineHeight: 30}}>{"Team ID: "}{this.state.teamInfo.id}</Text>
             </View>
             <View style={styles.horiStyle}>
-              <Button type="clear" icon={{name: "edit"}}/>
               <Text style={{lineHeight: 30}}>{"UID: "} {this.state.user.uid}</Text>
+            </View>
+            <View style={styles.horiStyle}>
+            <Button title='Change Password' type='clear' />
             </View>
             <Button title='Sign out' onPress={this.handleSignOut} type='clear' />
           </View>
