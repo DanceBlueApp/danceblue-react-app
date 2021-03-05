@@ -1,12 +1,15 @@
 // Import third-party dependencies
 import React from 'react'
-import { View } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { Text, Button } from 'react-native-elements'
 
 import SignUpForm from '../../components/SignUpForm'
 import LoginForm from '../../components/LoginForm'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
+
+//For edit icons
+import Icon from 'react-native-vector-icons/FontAwesome5'
 
 // Component for profile screen in main navigation
 class ProfileScreen extends React.Component {
@@ -140,15 +143,39 @@ class ProfileScreen extends React.Component {
     return (
       <> 
         {this.state.loggedIn && (
-          <View>
-            <Text>{"Name: "}{this.state.name}</Text>
-            <Text>{"Email Address: "}{this.state.email}</Text>
-            <Text>{"Team Number: "}{this.state.teamNo}</Text>
-            <Text>{"Team Name: "}{this.state.teamName}</Text>
-            <Text>{"Team Size: "}{this.state.teamInfo.size}</Text>
-            <Text>{"Team Points: "}{this.state.teamInfo.points}</Text>
-            <Text>{"Team ID: "}{this.state.teamInfo.id}</Text>
-            <Text>{"UID: "} {this.state.user.uid}</Text>
+          <View style={styles.vertiStyle}>
+            <View style={styles.horiStyle}>
+              <Button type="clear" icon={{name: "edit"}}/>
+              <Text h3>{"Name: "}{this.state.name}</Text>
+            </View>
+            <View style={styles.horiStyle}>
+              <Button type="clear" icon={{name: "edit"}}/>
+              <Text style={{lineHeight: 30}}>{"Email Address: "}{this.state.email}</Text>
+            </View>
+            <View style={styles.horiStyle}>
+              <Button type="clear" icon={{name: "edit"}}/>
+              <Text style={{lineHeight: 30}}>{"Team Number: "}{this.state.teamNo}</Text>
+            </View>
+            <View style={styles.horiStyle}>
+              <Button type="clear" icon={{name: "edit"}}/>
+              <Text style={{lineHeight: 30}}>{"Team Name: "}{this.state.teamName}</Text>
+            </View>
+            <View style={styles.horiStyle}>
+              <Button type="clear" icon={{name: "edit"}}/>
+              <Text style={{lineHeight: 30}}>{"Team Size: "}{this.state.teamInfo.size}</Text>
+              </View>
+            <View style={styles.horiStyle}>
+              <Button type="clear" icon={{name: "edit"}}/>
+              <Text style={{lineHeight: 30}}>{"Team Points: "}{this.state.teamInfo.points}</Text>
+            </View>
+            <View style={styles.horiStyle}>
+              <Button type="clear" icon={{name: "edit"}}/>
+              <Text style={{lineHeight: 30}}>{"Team ID: "}{this.state.teamInfo.id}</Text>
+            </View>
+            <View style={styles.horiStyle}>
+              <Button type="clear" icon={{name: "edit"}}/>
+              <Text style={{lineHeight: 30}}>{"UID: "} {this.state.user.uid}</Text>
+            </View>
             <Button title='Sign out' onPress={this.handleSignOut} type='clear' />
           </View>
         )}
@@ -174,5 +201,20 @@ class ProfileScreen extends React.Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  vertiStyle: {
+    margin: 1
+  },
+  horiStyle: {
+    margin: 1,
+    flexDirection: 'row',
+
+  }
+});
 
 export default withFirebaseHOC(ProfileScreen)
