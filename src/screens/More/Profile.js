@@ -1,6 +1,6 @@
 // Import third-party dependencies
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { Text, Button } from 'react-native-elements';
 
 import SignUpForm from '../../components/SignUpForm';
@@ -8,12 +8,6 @@ import LoginForm from '../../components/LoginForm';
 import EditForm from '../../components/EditForm';
 
 import { withFirebaseHOC } from '../../../config/Firebase';
-
-
-
-// For edit icons
-// import Icon from 'react-native-vector-icons/FontAwesome5'
-import { Alert } from 'react-native';
 
 // Component for profile screen in main navigation
 class ProfileScreen extends React.Component {
