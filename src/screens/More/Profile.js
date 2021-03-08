@@ -9,8 +9,6 @@ import EditForm from '../../components/EditForm';
 
 import { withFirebaseHOC } from '../../../config/Firebase';
 
-import DialogInput from 'react-native-dialog-input';
-
 
 
 // For edit icons
