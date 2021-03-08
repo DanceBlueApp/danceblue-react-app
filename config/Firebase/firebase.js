@@ -59,6 +59,7 @@ const Firebase = {
       .where('uid', '==', userId)
       .get()
   },
+  //TODO: delete current getUser (the one with the query) and rename getUserData to getUser.
   getUserData: (userId) => {
     return firebase
       .firestore()

@@ -20,8 +20,30 @@ class EditForm extends React.Component {
     this.state = {
       name: props.name
     }
-
+    
+    this.handleUpdate = this.handleUpdate.bind(this)
     this.handleSignup = this.handleSignUp.bind(this)
+  }
+
+  handleUpdate (values, actions) {
+    const {name, email, teamNo } = values;
+    const userData = {
+      name: name,
+      email: email,
+      team: teamNo,
+    }
+    const firebaseDoc = this.props.firebase.firestore().collection('users').doc(this.uid);
+    if(userData.name !== this.name && this.name != ""){
+      firebaseDoc.update({ name: name })
+    }
+    if(userData.email !== this.email && this.name != ""){
+      firebaseDoc.update({ email: userData.email})
+      firebase.auth().currentUser.updateEmail(userData.email)
+    }
+    if(userData.teamNo !== this.teamNo && this.name != ""){
+      firebaseDoc.update({team: userData.teamNo})
+    }
+    console.log('values: ', actions);
   }
 
   handleSignUp (values, actions) {
@@ -40,10 +62,12 @@ class EditForm extends React.Component {
   render () {
     console.log('Edit Profile!')
     console.log('uid: ', this.props.profileData.uid);
+
     return (
       <Formik
         initialValues={{ email: '', password: '', name: '', team: '' }}
-        onSubmit={(values, actions) => this.handleSignUp(values, actions)}
+//        onSubmit={(values, actions) => this.handleSignUp(values, actions)}
+          onSubmit={(values, actions) => this.handleUpdate(values, actions)}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View>

@@ -170,7 +170,6 @@ class ProfileScreen extends React.Component {
     const { navigate } = this.props.navigation
     // Show either profile (if logged in) or log-in/sign-up page (if logged out)
     // Need to get edit dialogs working. Currently not.
-    console.log('test')
     return (
       <> 
         {this.state.loggedIn && !this.state.editProfile && (
