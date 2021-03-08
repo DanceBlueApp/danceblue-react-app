@@ -36,6 +36,7 @@ class ProfileScreen extends React.Component {
 
     this.handleSignOut = this.handleSignOut.bind(this);
     this.handleSignIn = this.handleSignIn.bind(this);
+    this.handleEditProfile = this.handleEditProfile.bind(this);
   }
 
   componentDidMount () {
@@ -102,23 +103,22 @@ class ProfileScreen extends React.Component {
     }
     
     //Various attempts at getting DB queries working.
-    console.log('getTeamName teamNo = ', teamNo);
-    console.log('teamNo === undefined?', (teamNo === undefined))
-    let num = Number(teamNo);
-    console.log('num =', num);
-    if(num != NaN){
-      this.props.firebase.getTeam(teamNo)
-        .then((querySnapshot) => {
-        //console.log('querySnapshot: ', querySnapshot)
-      querySnapshot.forEach((doc) => { //Everything seems to work until this point. I get no output.
-        console.log("doc: ", doc);
-        console.log(doc.id, ' => ', doc.data());
-      });
-    })
-    .catch((error) => {
-      console.log("Error getting documents: ", error);
-    });
-    }
+    // console.log('getTeamName teamNo = ', teamNo);
+    // console.log('teamNo === undefined?', (teamNo === undefined))
+    // let num = Number(teamNo);
+    // if(num != NaN){
+    //   this.props.firebase.getTeam(teamNo)
+    //     .then((querySnapshot) => {
+    //     //console.log('querySnapshot: ', querySnapshot)
+    //   querySnapshot.forEach((doc) => { //Everything seems to work until this point. I get no output.
+    //     console.log("doc: ", doc);
+    //     console.log(doc.id, ' => ', doc.data());
+    //   });
+    // })
+    // .catch((error) => {
+    //   console.log("Error getting documents: ", error);
+    // });
+    // }
       
   }
   
@@ -155,15 +155,25 @@ class ProfileScreen extends React.Component {
     }
   }
   
+  handleEditProfile() {
+    this.setState({editProfile: !this.state.editProfile})
+    // if(this.state.loggedIn == true){
+    //   this.setState({editProfile: true});
+    // }
+    // else{
+    //   this.setState({editProfile: false});
+    // }
+  }
 
   render () {
     /* eslint-disable */
     const { navigate } = this.props.navigation
     // Show either profile (if logged in) or log-in/sign-up page (if logged out)
     // Need to get edit dialogs working. Currently not.
+    console.log('test')
     return (
       <> 
-        {this.state.loggedIn && (
+        {this.state.loggedIn && !this.state.editProfile && (
           <View style={styles.vertiStyle}>
             <View>
               <Text h3>{"Name: "}{this.state.name}</Text>
@@ -184,9 +194,19 @@ class ProfileScreen extends React.Component {
             
             </View>
             <Button type='clear' title='Change Password' onPress={() => Alert.alert("Change Password", "This will be a change password screen")} />
-            <Button type='clear' title='Edit Profile' onPress={() => Alert.alert("Edit Profile", "This will be an edit profile screen")} />
+            <Button type='clear' title='Edit Profile' 
+              onPress={this.handleEditProfile}
+            />
             <Button type='clear' title='Sign out' onPress={this.handleSignOut}  />
           </View>
+        )}
+        {this.state.loggedIn && this.state.editProfile && (
+          <EditForm profileData = {{
+            name: this.state.name,
+            email: this.state.email,
+            teamNo: this.state.teamNo,
+            uid: this.state.uid,
+        }}/>
         )}
         {!this.state.loggedIn && this.state.signUp && (
           <View>
@@ -203,7 +223,7 @@ class ProfileScreen extends React.Component {
               Login
             </Text>
             <LoginForm />
-            <Button title="New? Click here to Sign Up!" onPress={this.handleSignIn} type="clear" />
+            <Button type="clear" title="New? Click here to Sign Up!" onPress={this.handleSignIn} />
           </View>
         )}
       </>

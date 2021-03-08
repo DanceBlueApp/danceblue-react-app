@@ -1,7 +1,7 @@
 // Import third-party dependencies
 import React from 'react'
 import { View } from 'react-native'
-import { Input } from 'react-native-elements'
+import { Input, Button } from 'react-native-elements'
 import { Formik, ErrorMessage } from 'formik'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
@@ -11,9 +11,10 @@ class EditForm extends React.Component {
   constructor (props) {
     super(props)
 
-    this.name = props.name
-    this.email = props.email
-    this.team = props.team
+    this.name = this.props.profileData.name
+    this.email = this.props.profileData.email
+    this.team = this.props.profileData.teamNo
+    this.uid = this.props.profileData.uid
     this.teamname = props.teamName
     this.teampoints = props.teamPoints
     this.state = {
@@ -37,6 +38,8 @@ class EditForm extends React.Component {
   }
 
   render () {
+    console.log('Edit Profile!')
+    console.log('uid: ', this.props.profileData.uid);
     return (
       <Formik
         initialValues={{ email: '', password: '', name: '', team: '' }}
@@ -84,6 +87,14 @@ class EditForm extends React.Component {
               onChangeText={handleChange('teampoints')}
               onBlur={handleBlur('teampoints')}
               value={values.teampoints}
+            />
+            <Button
+              containerStyle={{
+                padding: 10,
+                overflow: "hidden"
+              }}
+              onPress={handleSubmit}
+              title="Save Changes"
             />
           </View>
         )}
