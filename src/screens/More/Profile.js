@@ -1,15 +1,21 @@
 // Import third-party dependencies
-import React from 'react'
-import { View, StyleSheet } from 'react-native'
-import { Text, Button } from 'react-native-elements'
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Text, Button } from 'react-native-elements';
 
-import SignUpForm from '../../components/SignUpForm'
-import LoginForm from '../../components/LoginForm'
+import SignUpForm from '../../components/SignUpForm';
+import LoginForm from '../../components/LoginForm';
+import EditForm from '../../components/EditForm';
 
-import { withFirebaseHOC } from '../../../config/Firebase'
+import { withFirebaseHOC } from '../../../config/Firebase';
 
-//For edit icons
-import Icon from 'react-native-vector-icons/FontAwesome5'
+import DialogInput from 'react-native-dialog-input';
+
+
+
+// For edit icons
+// import Icon from 'react-native-vector-icons/FontAwesome5'
+import { Alert } from 'react-native';
 
 // Component for profile screen in main navigation
 class ProfileScreen extends React.Component {
@@ -19,6 +25,7 @@ class ProfileScreen extends React.Component {
     this.state = {
       loggedIn: false,
       signUp: false,
+      editProfile: false,
       user: undefined, 
       name: undefined,
       email: undefined,
@@ -117,7 +124,24 @@ class ProfileScreen extends React.Component {
       
   }
   
-  
+  // handleEditDialog(dialogName){
+  //   console.log('entering handleEditDialog');
+  //   let title =  `Edit ${dialogName}`;
+  //   let description =  `Enter new ${dialogName}`;
+  //   let visible = true;
+  //   <View style={styles.container}>
+  //     <Dialog.Container visible={visible}>
+  //       <Dialog.Title>{title}</Dialog.Title>
+  //       <Dialog.Description>
+  //         {description}
+  //       </Dialog.Description>
+  //       <Dialog.Input>
+  //         text goes here
+  //       </Dialog.Input>
+  //       <Dialog.Button label="Cancel" onPress={() => {visible = false;}}/>
+  //     </Dialog.Container>
+  //   </View>
+  // }
 
   handleSignOut () {
     this.props.firebase.signOut().then(() => {
@@ -138,43 +162,32 @@ class ProfileScreen extends React.Component {
     /* eslint-disable */
     const { navigate } = this.props.navigation
     // Show either profile (if logged in) or log-in/sign-up page (if logged out)
-    // console.log('nameTest', this.state.name);
-    //console.log('this.teamInfo:', this.state.teamInfo);
+    // Need to get edit dialogs working. Currently not.
     return (
       <> 
         {this.state.loggedIn && (
           <View style={styles.vertiStyle}>
-            <View style={styles.horiStyle}>
-              <Button type="clear" icon={{name: "edit"}}/>
+            <View>
               <Text h3>{"Name: "}{this.state.name}</Text>
-            </View>
-            <View style={styles.horiStyle}>
-              <Button type="clear" icon={{name: "edit"}}/>
+           
               <Text style={{lineHeight: 30}}>{"Email Address: "}{this.state.email}</Text>
-            </View>
-            <View style={styles.horiStyle}>
-              <Button type="clear" icon={{name: "edit"}}/>
+            
               <Text style={{lineHeight: 30}}>{"Team Number: "}{this.state.teamNo}</Text>
-            </View>
-            <View style={styles.horiStyle}>
+            
               <Text style={{lineHeight: 30}}>{"Team Name: "}{this.state.teamName}</Text>
-            </View>
-            <View style={styles.horiStyle}>
+            
               <Text style={{lineHeight: 30}}>{"Team Size: "}{this.state.teamInfo.size}</Text>
-              </View>
-            <View style={styles.horiStyle}>
+            
               <Text style={{lineHeight: 30}}>{"Team Points: "}{this.state.teamInfo.points}</Text>
-            </View>
-            <View style={styles.horiStyle}>
+           
               <Text style={{lineHeight: 30}}>{"Team ID: "}{this.state.teamInfo.id}</Text>
-            </View>
-            <View style={styles.horiStyle}>
+            
               <Text style={{lineHeight: 30}}>{"UID: "} {this.state.user.uid}</Text>
+            
             </View>
-            <View style={styles.horiStyle}>
-            <Button title='Change Password' type='clear' />
-            </View>
-            <Button title='Sign out' onPress={this.handleSignOut} type='clear' />
+            <Button type='clear' title='Change Password' onPress={() => Alert.alert("Change Password", "This will be a change password screen")} />
+            <Button type='clear' title='Edit Profile' onPress={() => Alert.alert("Edit Profile", "This will be an edit profile screen")} />
+            <Button type='clear' title='Sign out' onPress={this.handleSignOut}  />
           </View>
         )}
         {!this.state.loggedIn && this.state.signUp && (
@@ -206,7 +219,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   vertiStyle: {
-    margin: 1
+    margin: 1,
+    flex: 1
   },
   horiStyle: {
     margin: 1,
