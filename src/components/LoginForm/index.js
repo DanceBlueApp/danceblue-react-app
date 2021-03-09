@@ -5,7 +5,7 @@ import { Input, Button } from 'react-native-elements'
 import { Formik } from 'formik'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
-
+//hello
 // Component for profile screen in main navigation
 class LoginForm extends React.Component {
   constructor (props) {
