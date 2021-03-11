@@ -36,8 +36,9 @@ class ProfileScreen extends React.Component {
   }
 //This will handle the guest sign in and allow the user to access it while giving them the anonymous tag
   guestSignin(){
+    console.log(this.props.firebase)
     this.props.firebase.anonymousUser().then(() => {
-    this.setState({ loggedIn: true})})
+      this.setState({ loggedIn: true})})
     }
   
 
