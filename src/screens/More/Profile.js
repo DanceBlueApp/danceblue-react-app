@@ -35,11 +35,11 @@ class ProfileScreen extends React.Component {
 
   componentDidMount () {
     this.props.firebase.checkAuthUser(user => {
-        let email = undefined;
-        let name = undefined;
-        let teamNo = undefined;
-        let teamName = undefined;
-        let uid = undefined;
+        let email;
+        let name;
+        let teamNo;
+        let teamName;
+        let uid;
         //console.log('user: ', user);
       if (user) {
         //define team info vars to load with database data
@@ -100,13 +100,16 @@ class ProfileScreen extends React.Component {
     // console.log('getTeamName teamNo = ', teamNo);
     // console.log('teamNo === undefined?', (teamNo === undefined))
     // let num = Number(teamNo);
+    // console.log('num = ', num);
     // if(num != NaN){
-    //   this.props.firebase.getTeam(teamNo)
+    //   this.props.firebase.getTeam( 1 )
     //     .then((querySnapshot) => {
     //     //console.log('querySnapshot: ', querySnapshot)
     //   querySnapshot.forEach((doc) => { //Everything seems to work until this point. I get no output.
     //     console.log("doc: ", doc);
+    //     console.log('doc.id    doc.data()')
     //     console.log(doc.id, ' => ', doc.data());
+    //     console.log("team info:", )
     //   });
     // })
     // .catch((error) => {
