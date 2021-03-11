@@ -34,9 +34,16 @@ class ProfileScreen extends React.Component {
       this.setState({ loggedIn: false, user: undefined })
     })
   }
+//This will handle the guest sign in and allow the user to access it while giving them the anonomous tag
+  guestSignin(){
+    this.props.firebase.anyonomousUser().then(() => {
+    this.setState({ loggedIn: true})})
+    }
+  
 
   render () {
     /* eslint-disable */
+    //added the buttons for the signin guests
     const { navigate } = this.props.navigation
     return (
       <>
@@ -52,10 +59,12 @@ class ProfileScreen extends React.Component {
               Sign Up
             </Text>
             <SignUpForm />
+            <Button title="Sign in as Guest?" onPress={this.guestSignin} type="clear" />
             <Text h2 style={{ textAlign: 'center' }}>
               Login
             </Text>
             <LoginForm />
+            <Button title="Sign in as Guest?" onPress={this.guestSignin} type="clear" />
           </View>
         )}
       </>
