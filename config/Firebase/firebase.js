@@ -60,6 +60,7 @@ const Firebase = {
   //     .where('uid', '==', userId)
   //     .get()
   // },
+  // Returns a promise for a user document, by UID.
   getUser: (userId) => {
     return firebase
       .firestore()
@@ -67,12 +68,20 @@ const Firebase = {
       .doc(userId)
       .get()
   },
-  // This can be used to pull team information based on user's team.
+  //Returns a promise for a team document, by team ID.
   getTeam: (teamId) => {
     return firebase
       .firestore()
       .collection('teams')
-      .where('number', '==', teamId)
+      .doc(teamId)
+      .get()
+  },
+  // This can be used to pull team information based on user's team number.
+  getTeamByNumber: (teamNo) => {
+    return firebase
+      .firestore()
+      .collection('teams')
+      .where('number', '==', teamNo)
       .get()
   },
   // cloud storage
