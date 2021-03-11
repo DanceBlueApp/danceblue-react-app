@@ -19,6 +19,10 @@ const Firebase = {
   checkAuthUser: (user) => {
     return firebase.auth().onAuthStateChanged(user)
   },
+  //added to return for anonymous user if the click the sign in as guest button
+  anonymousUser: () =>{
+    return firebase.auth().signInAnonymously()
+  },
   // firestore
   createNewUser: userData => {
     return firebase
