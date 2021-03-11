@@ -24,7 +24,9 @@ class ProfileScreen extends React.Component {
       teamNo: undefined,
       teamName: undefined,
       teamInfo: [],
-      uid: undefined
+      uid: undefined,
+      teamID: undefined,
+      userInfo: [],
     }
   
 
@@ -35,34 +37,47 @@ class ProfileScreen extends React.Component {
 
   componentDidMount () {
     this.props.firebase.checkAuthUser(user => {
-        let email;
-        let name;
-        let teamNo;
-        let teamName;
-        let uid;
+      let userData = [];  
+      let teamData = [];
+      let email;
+      let name;
+      let teamNo;
+      let uid;
+      let teamID;
         //console.log('user: ', user);
       if (user) {
         //define team info vars to load with database data
-        this.props.firebase.getUserData(user.uid).then(data => {
+        this.props.firebase.getUser(user.uid).then(data => {
+          userData = data.data();
+          //console.log('userData: ', userData);
           email = data.data().email;
           name = data.data().name;
-          teamNo = data.data().team;
-          uid = data.data().uid;
-          this.getTeamName(data.data().team);
+          teamNo = data.data().teamNumber;
+          uid = user.uid;
+          teamID = data.data().teamID;
+          console.log('teamID', teamID)
+          //Old team data method, from before we stored teamID in user document
+          //this.getTeamName(data.data().team);
+          if(teamID){
+            teamData = this.getTeamInfo(teamID)
+          }
+          console.log('teamData: ', teamData)
           this.setState({ 
             loggedIn: true, 
             user: user, 
             name: name,
             email: email, 
             teamNo: teamNo, 
-            uid: uid});
+            uid: uid,
+            teamID: teamID
+          });
         });
-        
-        //console.log('teamNo save test', this.state.teamNo);
-        //console.log('let teamNo test: ', teamNo);
-        // this.props.firebase.getTeam(teamNo).then(data => {
-        //   console.log('teamNo Test: ', data.data());
-        // })
+      }
+      console.log('this.state.teamID', this.state.teamID)
+      if (this.state.teamID){
+        this.setState({
+          teamInfo: this.getTeamInfo(this.state.teamID)
+        })
       }
     })
   }
@@ -74,49 +89,17 @@ class ProfileScreen extends React.Component {
   // pulls the name field of that index, and updates the team name state.
   // For future: query the DB for the name and throw it in the state.
   // Couldn't get any of the code from tutorials to actually do this.
-  getTeamName(teamNo) {
-    let teamName = undefined
-    if(teamNo != undefined){
-      const teams = [];
-      let teamInfo = [];
-      this.props.firebase.getTeams().then(snapshot => {
-        snapshot.forEach(doc => {
-          teams.push({ id: doc.id, ...doc.data() })
-        })
-        let team = teams.findIndex(function(post, index) {
-          if(post.number == teamNo)
-            return true;
-        })
-        teamName = teams[team].name;
-        //console.log('teams[team]:', teams[team]);
-        teamInfo = teams[team];
-        //console.log('teamInfo: ', teamInfo);
-        this.setState({teamInfo: teamInfo});
-        this.setState({teamName: teamName});
-      });
-    }
+  getTeamInfo(teamID) {
+    let teamInfo = [];
+    this.props.firebase.getTeam(teamID).then(data => {
+      teamInfo = data.data()
+      console.log('teamInfo', teamInfo)
+      this.setState({
+        teamInfo: teamInfo
+      })
+    })
     
-    //Various attempts at getting DB queries working.
-    // console.log('getTeamName teamNo = ', teamNo);
-    // console.log('teamNo === undefined?', (teamNo === undefined))
-    // let num = Number(teamNo);
-    // console.log('num = ', num);
-    // if(num != NaN){
-    //   this.props.firebase.getTeam( 1 )
-    //     .then((querySnapshot) => {
-    //     //console.log('querySnapshot: ', querySnapshot)
-    //   querySnapshot.forEach((doc) => { //Everything seems to work until this point. I get no output.
-    //     console.log("doc: ", doc);
-    //     console.log('doc.id    doc.data()')
-    //     console.log(doc.id, ' => ', doc.data());
-    //     console.log("team info:", )
-    //   });
-    // })
-    // .catch((error) => {
-    //   console.log("Error getting documents: ", error);
-    // });
-    // }
-      
+    return teamInfo;
   }
   
   // handleEditDialog(dialogName){
@@ -167,6 +150,7 @@ class ProfileScreen extends React.Component {
     const { navigate } = this.props.navigation
     // Show either profile (if logged in) or log-in/sign-up page (if logged out)
     // Need to get edit dialogs working. Currently not.
+    console.log('this.state.teamInfo', this.state.teamInfo)
     return (
       <> 
         {this.state.loggedIn && !this.state.editProfile && (
@@ -176,15 +160,15 @@ class ProfileScreen extends React.Component {
            
               <Text style={{lineHeight: 30}}>{"Email Address: "}{this.state.email}</Text>
             
-              <Text style={{lineHeight: 30}}>{"Team Number: "}{this.state.teamNo}</Text>
+              <Text style={{lineHeight: 30}}>{"Team Number: "}{this.state.teamInfo.number}</Text>
             
-              <Text style={{lineHeight: 30}}>{"Team Name: "}{this.state.teamName}</Text>
+              <Text style={{lineHeight: 30}}>{"Team Name: "}{this.state.teamInfo.name}</Text>
             
               <Text style={{lineHeight: 30}}>{"Team Size: "}{this.state.teamInfo.size}</Text>
             
               <Text style={{lineHeight: 30}}>{"Team Points: "}{this.state.teamInfo.points}</Text>
            
-              <Text style={{lineHeight: 30}}>{"Team ID: "}{this.state.teamInfo.id}</Text>
+              <Text style={{lineHeight: 30}}>{"Team ID: "}{this.state.teamID}</Text>
             
               <Text style={{lineHeight: 30}}>{"UID: "} {this.state.user.uid}</Text>
             
