@@ -19,6 +19,9 @@ const Firebase = {
   checkAuthUser: (user) => {
     return firebase.auth().onAuthStateChanged(user)
   },
+  updateUserEmail: (uid, email) => {
+    return firebase.auth().updateUser(uid, {email: email})
+  },
   // firestore
   createNewUser: userData => {
     return firebase
@@ -67,6 +70,12 @@ const Firebase = {
       .collection('users')
       .doc(userId)
       .get()
+  },
+  userDoc: (userId) => {
+    return firebase
+    .firestore()
+    .collection('users')
+    .doc(userId)
   },
   //Returns a promise for a team document, by team ID.
   getTeam: (teamId) => {

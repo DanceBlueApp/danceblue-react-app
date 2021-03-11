@@ -20,6 +20,7 @@ class EditForm extends React.Component {
     this.state = {
       name: props.name
     }
+    this.user = this.props.profileData.user
     
     this.handleUpdate = this.handleUpdate.bind(this)
     this.handleSignup = this.handleSignUp.bind(this)
@@ -32,18 +33,29 @@ class EditForm extends React.Component {
       email: email,
       team: teamNo,
     }
-    const firebaseDoc = this.props.firebase.firestore().collection('users').doc(this.uid);
-    if(userData.name !== this.name && this.name != ""){
-      firebaseDoc.update({ name: name })
-    }
-    if(userData.email !== this.email && this.name != ""){
+    //console.log('uid: ', this.props.profileData.uid)
+    //console.log('userData: ', userData)
+    //console.log('email update: ', this.props.firebase.updateUserEmail("pcwa@uk.ed"))
+    
+    var firebaseDoc = this.props.firebase.userDoc(this.props.profileData.uid)
+    if(userData.name != this.name && userData.name != ""){
+      firebaseDoc.update({ name: userData.name })
+    } else {console.log('name not changed')}
+    if(userData.email !== this.email && userData.email != ""){
       firebaseDoc.update({ email: userData.email})
-      firebase.auth().currentUser.updateEmail(userData.email)
-    }
-    if(userData.teamNo !== this.teamNo && this.name != ""){
-      firebaseDoc.update({team: userData.teamNo})
-    }
-    console.log('values: ', actions);
+      console.log('this.user: ', this.user)
+      this.user.updateEmail(userData.email).then((userRecord) => {
+        console.log('successfully updated user', userRecord.toJSON())
+      })
+      .catch((error) => {
+        console.log('error updating user: ', error);
+      })
+    } else console.log('email not changed')
+    
+    // if(userData.teamNo !== this.teamNo && this.name != ""){
+    //   firebaseDoc.update({team: userData.teamNo})
+    // }
+    //console.log('values: ', actions);
   }
 
   handleSignUp (values, actions) {
@@ -88,7 +100,7 @@ class EditForm extends React.Component {
               onBlur={handleBlur('email')}
               value={values.email}
             />
-            <Input
+            {/* <Input
               type='team'
               name='team'
               placeholder={`Team Number: ${this.team}`}
@@ -111,7 +123,7 @@ class EditForm extends React.Component {
               onChangeText={handleChange('teampoints')}
               onBlur={handleBlur('teampoints')}
               value={values.teampoints}
-            />
+            /> */}
             <Button
               containerStyle={{
                 padding: 10,

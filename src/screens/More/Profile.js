@@ -55,13 +55,13 @@ class ProfileScreen extends React.Component {
           teamNo = data.data().teamNumber;
           uid = user.uid;
           teamID = data.data().teamID;
-          console.log('teamID', teamID)
+          // console.log('teamID', teamID)
           //Old team data method, from before we stored teamID in user document
           //this.getTeamName(data.data().team);
           if(teamID){
             teamData = this.getTeamInfo(teamID)
           }
-          console.log('teamData: ', teamData)
+          // console.log('teamData: ', teamData)
           this.setState({ 
             loggedIn: true, 
             user: user, 
@@ -73,7 +73,7 @@ class ProfileScreen extends React.Component {
           });
         });
       }
-      console.log('this.state.teamID', this.state.teamID)
+      // console.log('this.state.teamID', this.state.teamID)
       if (this.state.teamID){
         this.setState({
           teamInfo: this.getTeamInfo(this.state.teamID)
@@ -93,7 +93,7 @@ class ProfileScreen extends React.Component {
     let teamInfo = [];
     this.props.firebase.getTeam(teamID).then(data => {
       teamInfo = data.data()
-      console.log('teamInfo', teamInfo)
+      //console.log('teamInfo', teamInfo)
       this.setState({
         teamInfo: teamInfo
       })
@@ -150,7 +150,8 @@ class ProfileScreen extends React.Component {
     const { navigate } = this.props.navigation
     // Show either profile (if logged in) or log-in/sign-up page (if logged out)
     // Need to get edit dialogs working. Currently not.
-    console.log('this.state.teamInfo', this.state.teamInfo)
+    // console.log('this.state.teamInfo', this.state.teamInfo)
+    // console.log('user: ', this.state.user)
     return (
       <> 
         {this.state.loggedIn && !this.state.editProfile && (
@@ -182,6 +183,7 @@ class ProfileScreen extends React.Component {
         )}
         {this.state.loggedIn && this.state.editProfile && (
           <EditForm profileData = {{
+            user: this.state.user,
             name: this.state.name,
             email: this.state.email,
             teamNo: this.state.teamNo,
