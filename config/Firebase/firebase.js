@@ -52,15 +52,15 @@ const Firebase = {
       .collection('announcements')
       .get()
   },
+  // Old getUser method, didn't really work.
+  // getUser: (userId) => {
+  //   return firebase
+  //     .firestore()
+  //     .collection('users')
+  //     .where('uid', '==', userId)
+  //     .get()
+  // },
   getUser: (userId) => {
-    return firebase
-      .firestore()
-      .collection('users')
-      .where('uid', '==', userId)
-      .get()
-  },
-  //TODO: delete current getUser (the one with the query) and rename getUserData to getUser.
-  getUserData: (userId) => {
     return firebase
       .firestore()
       .collection('users')
