@@ -19,9 +19,6 @@ const Firebase = {
   checkAuthUser: (user) => {
     return firebase.auth().onAuthStateChanged(user)
   },
-  updateUserEmail: (uid, email) => {
-    return firebase.auth().updateUser(uid, {email: email})
-  },
   // firestore
   createNewUser: userData => {
     return firebase

@@ -27,11 +27,14 @@ class EditForm extends React.Component {
   }
 
   handleUpdate (values, actions) {
-    const {name, email, teamNo } = values;
+    const {name, email, teamNo, pass, pass1, pass2 } = values;
     const userData = {
       name: name,
       email: email,
       team: teamNo,
+      pass: pass,
+      pass1: pass1,
+      pass2: pass2,
     }
     //console.log('uid: ', this.props.profileData.uid)
     //console.log('userData: ', userData)
@@ -45,7 +48,7 @@ class EditForm extends React.Component {
       firebaseDoc.update({ email: userData.email})
       console.log('this.user: ', this.user)
       this.user.updateEmail(userData.email).then((userRecord) => {
-        console.log('successfully updated user', userRecord.toJSON())
+        console.log('successfully updated user')
       })
       .catch((error) => {
         console.log('error updating user: ', error);
@@ -86,6 +89,8 @@ class EditForm extends React.Component {
 
             <Input
               name='name'
+              autoCapitalize={'words'}
+              autoCompleteType={'name'}
               placeholder={`Name: ${this.name}`}
               onChangeText={handleChange('name')}
               onBlur={handleBlur('name')}
@@ -95,10 +100,32 @@ class EditForm extends React.Component {
             <Input
               type='email'
               name='email'
+              autoCapitalize={'none'}
+              autoCompleteType={'email'}
               placeholder={`Email: ${this.email}`}
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
+            />
+            <Input
+              type='pass'
+              name='password'
+              autoCapitalize={'none'}
+              autoCompleteType={'password'}
+              placeholder={`password`}
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.pass}
+            />
+            <Input
+              type='pass'
+              name='newPass1'
+              autoCapitalize={'none'}
+              autoCompleteType={'password'}
+              placeholder={`New Password`}
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.pass}
             />
             {/* <Input
               type='team'
