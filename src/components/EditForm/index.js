@@ -1,7 +1,7 @@
 // Import third-party dependencies
 import React from 'react'
-import { View } from 'react-native'
-import { Input, Button } from 'react-native-elements'
+import { View, KeyboardAvoidingView } from 'react-native'
+import { Text, Input, Button } from 'react-native-elements'
 import { Formik, ErrorMessage } from 'formik'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
@@ -46,7 +46,7 @@ class EditForm extends React.Component {
     } else {console.log('name not changed')}
     if(userData.email !== this.email && userData.email != ""){
       firebaseDoc.update({ email: userData.email})
-      console.log('this.user: ', this.user)
+      //console.log('this.user: ', this.user)
       this.user.updateEmail(userData.email).then((userRecord) => {
         console.log('successfully updated user')
       })
@@ -85,7 +85,7 @@ class EditForm extends React.Component {
           onSubmit={(values, actions) => this.handleUpdate(values, actions)}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
-          <View>
+          <KeyboardAvoidingView behaviour={"height"}>
 
             <Input
               name='name'
@@ -98,6 +98,18 @@ class EditForm extends React.Component {
             />
             <ErrorMessage name='name' />
             <Input
+              type='pass'
+              name='password'
+              autoCapitalize={'none'}
+              autoCompleteType={'password'}
+              secureTextEntry
+              placeholder={`Password`}
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.pass}
+            />
+            <Text style={{padding: 10}}>{'All below fields require password'}</Text>
+            <Input
               type='email'
               name='email'
               autoCapitalize={'none'}
@@ -107,25 +119,28 @@ class EditForm extends React.Component {
               onBlur={handleBlur('email')}
               value={values.email}
             />
+            
             <Input
               type='pass'
-              name='password'
+              name='newPass1'
               autoCapitalize={'none'}
               autoCompleteType={'password'}
-              placeholder={`password`}
+              secureTextEntry
+              placeholder={`New Password`}
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
-              value={values.pass}
+              value={values.pass1}
             />
             <Input
               type='pass'
               name='newPass1'
               autoCapitalize={'none'}
               autoCompleteType={'password'}
-              placeholder={`New Password`}
+              secureTextEntry
+              placeholder={`Confirm New Password`}
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
-              value={values.pass}
+              value={values.pass2}
             />
             {/* <Input
               type='team'
@@ -159,7 +174,7 @@ class EditForm extends React.Component {
               onPress={handleSubmit}
               title="Save Changes"
             />
-          </View>
+          </KeyboardAvoidingView>
         )}
       </Formik>
     )
