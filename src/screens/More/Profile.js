@@ -27,6 +27,7 @@ class ProfileScreen extends React.Component {
       uid: undefined,
       teamID: undefined,
       userInfo: [],
+      userPoints: 0,
     }
   
 
@@ -41,6 +42,7 @@ class ProfileScreen extends React.Component {
       let teamData = [];
       let email;
       let name;
+      let userPoints;
       let teamNo;
       let uid;
       let teamID;
@@ -55,6 +57,9 @@ class ProfileScreen extends React.Component {
           teamNo = data.data().teamNumber;
           uid = user.uid;
           teamID = data.data().teamID;
+          if(data.data().points){
+            userPoints = data.data().points
+          } else userPoints = 0
           // console.log('teamID', teamID)
           //Old team data method, from before we stored teamID in user document
           //this.getTeamName(data.data().team);
@@ -69,7 +74,8 @@ class ProfileScreen extends React.Component {
             email: email, 
             teamNo: teamNo, 
             uid: uid,
-            teamID: teamID
+            teamID: teamID,
+            userPoints: userPoints
           });
         });
       }
@@ -160,6 +166,8 @@ class ProfileScreen extends React.Component {
               <Text h3>{"Name: "}{this.state.name}</Text>
            
               <Text style={{lineHeight: 30}}>{"Email Address: "}{this.state.email}</Text>
+
+              <Text style={{lineHeight: 30}}>{"Points: "}{this.state.userPoints}</Text>
             
               <Text style={{lineHeight: 30}}>{"Team Number: "}{this.state.teamInfo.number}</Text>
             
