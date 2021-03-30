@@ -10,6 +10,13 @@ const Firebase = {
   loginWithEmail: (email, password) => {
     return firebase.auth().signInWithEmailAndPassword(email, password)
   },
+  reAuthWithEmail: (user, email, password) => {
+    let cred = firebase.auth.EmailAuthProvider.credential(email, password)
+    return user.reauthenticateWithCredential(cred)
+  },
+  changePassword: (user, password) => {
+    return user.updatePassword(password)
+  },
   signupWithEmail: (email, password) => {
     return firebase.auth().createUserWithEmailAndPassword(email, password)
   },
