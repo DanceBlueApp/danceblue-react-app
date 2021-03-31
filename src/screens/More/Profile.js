@@ -5,7 +5,7 @@ import { Text, Button } from 'react-native-elements'
 
 import SignUpForm from '../../components/SignUpForm'
 import LoginForm from '../../components/LoginForm'
-import EditForm from '../../components/EditForm'
+// import EditForm from '../../components/EditForm'
 import PassChangeForm from '../../components/PassChangeForm'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
@@ -28,7 +28,7 @@ class ProfileScreen extends React.Component {
       teamInfo: [],
       uid: undefined,
       teamID: undefined,
-      userInfo: [],
+      userData: [],
       userPoints: 0
     }
 
@@ -41,7 +41,6 @@ class ProfileScreen extends React.Component {
   componentDidMount () {
     this.props.firebase.checkAuthUser(user => {
       let userData = []
-      let teamData = []
       let email
       let name
       let userPoints
@@ -66,7 +65,7 @@ class ProfileScreen extends React.Component {
           // Old team data method, from before we stored teamID in user document
           // this.getTeamName(data.data().team);
           if (teamID) {
-            teamData = this.getTeamInfo(teamID)
+            this.getTeamInfo(teamID)
           }
           // console.log('teamData: ', teamData)
           this.setState({
@@ -77,15 +76,14 @@ class ProfileScreen extends React.Component {
             teamNo: teamNo,
             uid: uid,
             teamID: teamID,
-            userPoints: userPoints
+            userPoints: userPoints,
+            userData: userData
           })
         })
       }
       // console.log('this.state.teamID', this.state.teamID)
       if (this.state.teamID) {
-        this.setState({
-          teamInfo: this.getTeamInfo(this.state.teamID)
-        })
+        this.getTeamInfo(this.state.teamID)
       }
     })
   }
@@ -106,8 +104,6 @@ class ProfileScreen extends React.Component {
         teamInfo: teamInfo
       })
     })
-
-    return teamInfo
   }
 
   // handleEditDialog(dialogName){
@@ -136,7 +132,7 @@ class ProfileScreen extends React.Component {
   }
 
   handleSignIn () {
-    if (this.state.signUp == true) {
+    if (this.state.signUp === true) {
       this.setState({ loggedIn: false, signUp: false, user: undefined })
     } else {
       this.setState({ loggedIn: false, signUp: true, user: undefined })

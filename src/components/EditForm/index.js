@@ -1,6 +1,6 @@
 // Import third-party dependencies
 import React from 'react'
-import { View, KeyboardAvoidingView, Alert } from 'react-native'
+import { KeyboardAvoidingView, Alert } from 'react-native'
 import { Text, Input, Button } from 'react-native-elements'
 import { Formik, ErrorMessage } from 'formik'
 
@@ -42,12 +42,12 @@ class EditForm extends React.Component {
     // console.log('email update: ', this.props.firebase.updateUserEmail("pcwa@uk.ed"))
 
     const firebaseDoc = this.props.firebase.userDoc(this.props.profileData.uid)
-    if (userData.name != this.name && userData.name != '') {
+    if (userData.name !== this.name && userData.name !== '') {
       console.log('name change')
       firebaseDoc.update({ name: userData.name })
     } else { console.log('name not changed') }
-    if (userData.email !== this.email && userData.email != '') {
-      if (userData.pass == '') {
+    if (userData.email !== this.email && userData.email !== '') {
+      if (userData.pass === '') {
         Alert('In order to change email, you must enter your current password.')
       } else {
         this.props.firebase.reAuthWithEmail(this.user, userData.email, userData.pass).then(() => {
@@ -59,10 +59,10 @@ class EditForm extends React.Component {
         console.log('successfully updated user')
       }).catch((error) => { console.log('error updating user: ', error) })
     } else console.log('email not changed')
-    if (userData.pass1 != '') {
-      if (pass == '') {
+    if (userData.pass1 !== '') {
+      if (pass === '') {
         Alert('In order to change password, you must enter your current password')
-      } else if (userData.pass1 != userData.pass2) {
+      } else if (userData.pass1 !== userData.pass2) {
         Alert('New Passwords Do Not Match')
       } else {
         this.props.firebase.reAuthWithEmail(this.user, this.email, userData.pass).then(() => {
