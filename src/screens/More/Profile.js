@@ -6,6 +6,7 @@ import { Text, Button } from 'react-native-elements';
 import SignUpForm from '../../components/SignUpForm';
 import LoginForm from '../../components/LoginForm';
 import EditForm from '../../components/EditForm';
+import PassChangeForm from '../../components/PassChangeForm'
 
 import { withFirebaseHOC } from '../../../config/Firebase';
 
@@ -18,6 +19,7 @@ class ProfileScreen extends React.Component {
       loggedIn: false,
       signUp: false,
       editProfile: false,
+      changePassword: false,
       user: undefined, 
       name: undefined,
       email: undefined,
@@ -30,7 +32,7 @@ class ProfileScreen extends React.Component {
       userPoints: 0,
     }
   
-
+    this.changePassword = this.changePassword.bind(this);
     this.handleSignOut = this.handleSignOut.bind(this);
     this.handleSignIn = this.handleSignIn.bind(this);
     this.handleEditProfile = this.handleEditProfile.bind(this);
@@ -151,6 +153,10 @@ class ProfileScreen extends React.Component {
     // }
   }
 
+  changePassword() {
+    this.setState({changePassword: !this.state.changePassword})
+  }
+
   render () {
     /* eslint-disable */
     const { navigate } = this.props.navigation
@@ -182,14 +188,19 @@ class ProfileScreen extends React.Component {
               <Text style={{lineHeight: 30}}>{"UID: "} {this.state.user.uid}</Text>
             
             </View>
-            <Button type='clear' title='Change Password' onPress={() => Alert.alert("Change Password", "This will be a change password screen")} />
-            <Button type='clear' title='Edit Profile' 
+            <Button type='clear' title='Change Password' onPress={this.changePassword} />
+            {/* <Button type='clear' title='Edit Profile' 
               onPress={this.handleEditProfile}
-            />
+            /> */}
             <Button type='clear' title='Sign out' onPress={this.handleSignOut}  />
           </View>
         )}
-        {this.state.loggedIn && this.state.editProfile && (
+        {this.state.loggedIn && this.state.changePassword && (
+          <PassChangeForm profileData = {{
+            user: this.state.user
+          }}/>
+        )}
+        {/* this.state.loggedIn && this.state.editProfile && (
           <EditForm profileData = {{
             user: this.state.user,
             name: this.state.name,
@@ -197,7 +208,7 @@ class ProfileScreen extends React.Component {
             teamNo: this.state.teamNo,
             uid: this.state.uid,
         }}/>
-        )}
+        ) */}
         {!this.state.loggedIn && this.state.signUp && (
           <View>
             <Text h2 style={{ textAlign: 'center' }}>
