@@ -1,14 +1,14 @@
 // Import third-party dependencies
-import React from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
-import { Text, Button } from 'react-native-elements';
+import React from 'react'
+import { View, StyleSheet, Alert } from 'react-native'
+import { Text, Button } from 'react-native-elements'
 
-import SignUpForm from '../../components/SignUpForm';
-import LoginForm from '../../components/LoginForm';
-import EditForm from '../../components/EditForm';
+import SignUpForm from '../../components/SignUpForm'
+import LoginForm from '../../components/LoginForm'
+import EditForm from '../../components/EditForm'
 import PassChangeForm from '../../components/PassChangeForm'
 
-import { withFirebaseHOC } from '../../../config/Firebase';
+import { withFirebaseHOC } from '../../../config/Firebase'
 
 // Component for profile screen in main navigation
 class ProfileScreen extends React.Component {
@@ -20,7 +20,7 @@ class ProfileScreen extends React.Component {
       signUp: false,
       editProfile: false,
       changePassword: false,
-      user: undefined, 
+      user: undefined,
       name: undefined,
       email: undefined,
       teamNo: undefined,
@@ -29,60 +29,60 @@ class ProfileScreen extends React.Component {
       uid: undefined,
       teamID: undefined,
       userInfo: [],
-      userPoints: 0,
+      userPoints: 0
     }
-  
-    this.changePassword = this.changePassword.bind(this);
-    this.handleSignOut = this.handleSignOut.bind(this);
-    this.handleSignIn = this.handleSignIn.bind(this);
-    this.handleEditProfile = this.handleEditProfile.bind(this);
+
+    this.changePassword = this.changePassword.bind(this)
+    this.handleSignOut = this.handleSignOut.bind(this)
+    this.handleSignIn = this.handleSignIn.bind(this)
+    this.handleEditProfile = this.handleEditProfile.bind(this)
   }
 
   componentDidMount () {
     this.props.firebase.checkAuthUser(user => {
-      let userData = [];  
-      let teamData = [];
-      let email;
-      let name;
-      let userPoints;
-      let teamNo;
-      let uid;
-      let teamID;
-        //console.log('user: ', user);
+      let userData = []
+      let teamData = []
+      let email
+      let name
+      let userPoints
+      let teamNo
+      let uid
+      let teamID
+      // console.log('user: ', user);
       if (user) {
-        //define team info vars to load with database data
+        // define team info vars to load with database data
         this.props.firebase.getUser(user.uid).then(data => {
-          userData = data.data();
-          //console.log('userData: ', userData);
-          email = data.data().email;
-          name = data.data().name;
-          teamNo = data.data().teamNumber;
-          uid = user.uid;
-          teamID = data.data().teamID;
-          if(data.data().points){
+          userData = data.data()
+          // console.log('userData: ', userData);
+          email = data.data().email
+          name = data.data().name
+          teamNo = data.data().teamNumber
+          uid = user.uid
+          teamID = data.data().teamID
+          if (data.data().points) {
             userPoints = data.data().points
           } else userPoints = 0
           // console.log('teamID', teamID)
-          //Old team data method, from before we stored teamID in user document
-          //this.getTeamName(data.data().team);
-          if(teamID){
+          // Old team data method, from before we stored teamID in user document
+          // this.getTeamName(data.data().team);
+          if (teamID) {
             teamData = this.getTeamInfo(teamID)
           }
           // console.log('teamData: ', teamData)
-          this.setState({ 
-            loggedIn: true, 
-            user: user, 
+          this.setState({
+            loggedIn: true,
+            user: user,
             name: name,
-            email: email, 
-            teamNo: teamNo, 
+            email: email,
+            teamNo: teamNo,
             uid: uid,
             teamID: teamID,
             userPoints: userPoints
-          });
-        });
+          })
+        })
       }
       // console.log('this.state.teamID', this.state.teamID)
-      if (this.state.teamID){
+      if (this.state.teamID) {
         this.setState({
           teamInfo: this.getTeamInfo(this.state.teamID)
         })
@@ -90,26 +90,26 @@ class ProfileScreen extends React.Component {
     })
   }
 
-  // SUPER jank way of doing this. Need to figure out how to actually do queries 
+  // SUPER jank way of doing this. Need to figure out how to actually do queries
   // instead of pulling the entire team database and searching it in JS.
   // Currently: gets the entire teams collection, searches the 'number' field
-  // of the array of objects, returns the index of that team, 
+  // of the array of objects, returns the index of that team,
   // pulls the name field of that index, and updates the team name state.
   // For future: query the DB for the name and throw it in the state.
   // Couldn't get any of the code from tutorials to actually do this.
-  getTeamInfo(teamID) {
-    let teamInfo = [];
+  getTeamInfo (teamID) {
+    let teamInfo = []
     this.props.firebase.getTeam(teamID).then(data => {
       teamInfo = data.data()
-      //console.log('teamInfo', teamInfo)
+      // console.log('teamInfo', teamInfo)
       this.setState({
         teamInfo: teamInfo
       })
     })
-    
-    return teamInfo;
+
+    return teamInfo
   }
-  
+
   // handleEditDialog(dialogName){
   //   console.log('entering handleEditDialog');
   //   let title =  `Edit ${dialogName}`;
@@ -135,16 +135,16 @@ class ProfileScreen extends React.Component {
     })
   }
 
-  handleSignIn() {
+  handleSignIn () {
     if (this.state.signUp == true) {
-      this.setState({ loggedIn: false, signUp: false, user: undefined });
+      this.setState({ loggedIn: false, signUp: false, user: undefined })
     } else {
-      this.setState({ loggedIn: false, signUp: true, user: undefined });
+      this.setState({ loggedIn: false, signUp: true, user: undefined })
     }
   }
-  
-  handleEditProfile() {
-    this.setState({editProfile: !this.state.editProfile})
+
+  handleEditProfile () {
+    this.setState({ editProfile: !this.state.editProfile })
     // if(this.state.loggedIn == true){
     //   this.setState({editProfile: true});
     // }
@@ -153,8 +153,8 @@ class ProfileScreen extends React.Component {
     // }
   }
 
-  changePassword() {
-    this.setState({changePassword: !this.state.changePassword})
+  changePassword () {
+    this.setState({ changePassword: !this.state.changePassword })
   }
 
   render () {

@@ -11,7 +11,7 @@ const Firebase = {
     return firebase.auth().signInWithEmailAndPassword(email, password)
   },
   reAuthWithEmail: (user, email, password) => {
-    let cred = firebase.auth.EmailAuthProvider.credential(email, password)
+    const cred = firebase.auth.EmailAuthProvider.credential(email, password)
     return user.reauthenticateWithCredential(cred)
   },
   changePassword: (user, password) => {
@@ -77,11 +77,11 @@ const Firebase = {
   },
   userDoc: (userId) => {
     return firebase
-    .firestore()
-    .collection('users')
-    .doc(userId)
+      .firestore()
+      .collection('users')
+      .doc(userId)
   },
-  //Returns a promise for a team document, by team ID.
+  // Returns a promise for a team document, by team ID.
   getTeam: (teamId) => {
     return firebase
       .firestore()

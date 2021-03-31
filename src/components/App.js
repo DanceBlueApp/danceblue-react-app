@@ -79,4 +79,4 @@ const App = () => {
 }
 
 export default registerRootComponent(App)
-//testing purposes only
+// testing purposes only

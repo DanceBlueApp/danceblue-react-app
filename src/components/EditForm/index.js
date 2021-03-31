@@ -1,11 +1,10 @@
 // Import third-party dependencies
 import React from 'react'
-import { View, KeyboardAvoidingView } from 'react-native'
+import { View, KeyboardAvoidingView, Alert } from 'react-native'
 import { Text, Input, Button } from 'react-native-elements'
 import { Formik, ErrorMessage } from 'formik'
 
 import { withFirebaseHOC } from '../../../config/Firebase'
-import { Alert } from 'react-native'
 
 // Component for profile screen in main navigation
 class EditForm extends React.Component {
@@ -22,63 +21,62 @@ class EditForm extends React.Component {
       name: props.name
     }
     this.user = this.props.profileData.user
-    
+
     this.handleUpdate = this.handleUpdate.bind(this)
     this.handleSignup = this.handleSignUp.bind(this)
   }
 
   handleUpdate (values, actions) {
-    const {name, email, teamNo, pass, pass1, pass2 } = values;
+    const { name, email, teamNo, pass, pass1, pass2 } = values
     const userData = {
       name: name,
       email: email,
       team: teamNo,
       pass: pass,
       pass1: pass1,
-      pass2: pass2,
+      pass2: pass2
     }
-    //console.log('uid: ', this.props.profileData.uid)
+    // console.log('uid: ', this.props.profileData.uid)
     console.log('userData: ', userData)
     console.log('values', values)
-    //console.log('email update: ', this.props.firebase.updateUserEmail("pcwa@uk.ed"))
-    
-    var firebaseDoc = this.props.firebase.userDoc(this.props.profileData.uid)
-    if(userData.name != this.name && userData.name != ""){
+    // console.log('email update: ', this.props.firebase.updateUserEmail("pcwa@uk.ed"))
+
+    const firebaseDoc = this.props.firebase.userDoc(this.props.profileData.uid)
+    if (userData.name != this.name && userData.name != '') {
       console.log('name change')
       firebaseDoc.update({ name: userData.name })
-    } else {console.log('name not changed')}
-    if(userData.email !== this.email && userData.email != ""){
-      if(userData.pass == ''){
+    } else { console.log('name not changed') }
+    if (userData.email !== this.email && userData.email != '') {
+      if (userData.pass == '') {
         Alert('In order to change email, you must enter your current password.')
-      } else{
+      } else {
         this.props.firebase.reAuthWithEmail(this.user, userData.email, userData.pass).then(() => {
-          firebaseDoc.update({ email: userData.email
-          }).catch((error) => {console.log(error)})
-        }).catch((error) => {console.log(error)})
+          firebaseDoc.update({ email: userData.email }).catch((error) => { console.log(error) })
+        }).catch((error) => { console.log(error) })
       }
-      //console.log('this.user: ', this.user)
+      // console.log('this.user: ', this.user)
       this.user.updateEmail(userData.email).then(() => {
         console.log('successfully updated user')
-      }).catch((error) => {console.log('error updating user: ', error);})
+      }).catch((error) => { console.log('error updating user: ', error) })
     } else console.log('email not changed')
-    if(userData.pass1 != ''){
-      if(pass == ''){
+    if (userData.pass1 != '') {
+      if (pass == '') {
         Alert('In order to change password, you must enter your current password')
-      }else if(userData.pass1 != userData.pass2){
+      } else if (userData.pass1 != userData.pass2) {
         Alert('New Passwords Do Not Match')
-      }else{
+      } else {
         this.props.firebase.reAuthWithEmail(this.user, this.email, userData.pass).then(() => {
           this.props.firebase.changePassword(this.user, pass1).then(() => {
-            console.log("password changed")
-          }).catch((error) => {console.log(error)})
-        }).catch((error) => {console.log(error)})
+            console.log('password changed')
+          }).catch((error) => { console.log(error) })
+        }).catch((error) => { console.log(error) })
       }
     }
-    
+
     // if(userData.teamNo !== this.teamNo && this.name != ""){
     //   firebaseDoc.update({team: userData.teamNo})
     // }
-    //console.log('values: ', actions);
+    // console.log('values: ', actions);
   }
 
   handleSignUp (values, actions) {
@@ -96,21 +94,21 @@ class EditForm extends React.Component {
 
   render () {
     console.log('Edit Profile!')
-    console.log('uid: ', this.props.profileData.uid);
+    console.log('uid: ', this.props.profileData.uid)
 
     return (
       <Formik
         initialValues={{ email: '', password: '', name: '', team: '' }}
 //        onSubmit={(values, actions) => this.handleSignUp(values, actions)}
-          onSubmit={(values, actions) => this.handleUpdate(values, actions)}
+        onSubmit={(values, actions) => this.handleUpdate(values, actions)}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
-          <KeyboardAvoidingView behaviour={"height"}>
+          <KeyboardAvoidingView behaviour='height'>
 
             <Input
               name='name'
-              autoCapitalize={'words'}
-              autoCompleteType={'name'}
+              autoCapitalize='words'
+              autoCompleteType='name'
               placeholder={`Name: ${this.name}`}
               onChangeText={handleChange('name')}
               onBlur={handleBlur('name')}
@@ -120,33 +118,33 @@ class EditForm extends React.Component {
             <Input
               type='pass'
               name='password'
-              autoCapitalize={'none'}
-              autoCompleteType={'password'}
+              autoCapitalize='none'
+              autoCompleteType='password'
               secureTextEntry
-              placeholder={`Password`}
+              placeholder='Password'
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               value={values.pass}
             />
-            <Text style={{padding: 10}}>{'All below fields require password'}</Text>
+            <Text style={{ padding: 10 }}>All below fields require password</Text>
             <Input
               type='email'
               name='email'
-              autoCapitalize={'none'}
-              autoCompleteType={'email'}
+              autoCapitalize='none'
+              autoCompleteType='email'
               placeholder={`Email: ${this.email}`}
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
             />
-            
+
             <Input
               type='pass'
               name='newPass1'
-              autoCapitalize={'none'}
-              autoCompleteType={'password'}
+              autoCapitalize='none'
+              autoCompleteType='password'
               secureTextEntry
-              placeholder={`New Password`}
+              placeholder='New Password'
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               value={values.pass1}
@@ -154,10 +152,10 @@ class EditForm extends React.Component {
             <Input
               type='pass'
               name='newPass1'
-              autoCapitalize={'none'}
-              autoCompleteType={'password'}
+              autoCapitalize='none'
+              autoCompleteType='password'
               secureTextEntry
-              placeholder={`Confirm New Password`}
+              placeholder='Confirm New Password'
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               value={values.pass2}
@@ -189,10 +187,10 @@ class EditForm extends React.Component {
             <Button
               containerStyle={{
                 padding: 10,
-                overflow: "hidden"
+                overflow: 'hidden'
               }}
               onPress={handleSubmit}
-              title="Save Changes"
+              title='Save Changes'
             />
           </KeyboardAvoidingView>
         )}
