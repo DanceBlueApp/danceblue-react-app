@@ -14,5 +14,4 @@ npm install
 
 TODO: Describe and show how to build your code and run the tests.
 
-Push Test for Ali B.  
-Push Test for Ally D.
+Notes for profile screen: currently the profile screen is barebones, but correctly pulls up all the user's data. The edit profile screen is currently disabled, due to problems getting the change email function in firebase working. It changes the email everywhere except for the user's identity, meaning you still have to log in using the original email. 
